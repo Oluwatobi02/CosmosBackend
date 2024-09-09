@@ -1,0 +1,11 @@
+flask==2.0.3
+flask-cors
+flask-jwt-extended
+pymongo
+flask-mongoengine==1.0.0
+python-dotenv
+werkzeug==2.0.3
+redis
+flask-socketio
+gunicorn
+boto3
