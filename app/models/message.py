@@ -1,7 +1,6 @@
 from flask_mongoengine import MongoEngine
 db = MongoEngine()
 
-
 class Msg(db.EmbeddedDocument):
     sender = db.ReferenceField('User')
     message = db.StringField()
@@ -9,20 +8,22 @@ class Msg(db.EmbeddedDocument):
 
     def to_dict(self):
         return {
-            'sender': self.sender,
+            'sender': {
+                'id': self.sender['id'],
+                'name': self.sender['name'],
+                'picture': self.sender['basic_info']['picture'],
+            },
             'message' : self.message,
             'time': self.time
         }
-
-
 class Message(db.Document):
     meta = {
         'allow_inheritance': True
     }
     id = db.StringField(primary_key=True)
-    messages = db.ListField(db.EmbeddedDocumentField(Msg))
+    messages :list[Msg] = db.ListField(db.EmbeddedDocumentField(Msg))
     message_type = db.StringField()
-    people = db.ListField(db.GenericReferenceField())
+    people = db.ListField(db.ReferenceField('User'))
     event = db.ListField(db.ReferenceField('Event'))
 
     def getPeopleInfo(self):
@@ -35,9 +36,8 @@ class Message(db.Document):
             }
         return info
 
-    def addMessage(self, message):
-        msg = Msg(sender=message['sender'], message=message['message'], time=message['time'])
-        self.messages.append(msg)
+    def addMessage(self, message : Msg):
+        self.messages.append(message)
     
     def to_dict(self):
         return {
@@ -46,11 +46,25 @@ class Message(db.Document):
             'people': self.getPeopleInfo(),
             'event': self.event['title']
         }
-
+    def preview(self):
+        return {
+            'id': str(self.id),
+            'last_message': self.messages[-1],       
+        }
 
 class SingleMessage(Message):
     pass
 
 class GroupMessage(Message):
     name = db.StringField()
+    picture = db.StringField()
     organizer = db.ReferenceField('Organizer')
+
+
+    def preview(self):
+
+        return {
+            'id': str(self.id),
+            'last_message': self.messages[-1],
+            'picture': self.picture
+        }

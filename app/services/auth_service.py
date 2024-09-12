@@ -20,13 +20,10 @@ class AuthService:
                 name=user_info['name'],
                 basic_info=basic_info
             )
-            print(user_info)
             user.set_password(user_info['password'])
             if user_info['basic_info'].get('picture'):
-                print('here')
                 print(type(user_info['basic_info'].get('picture')), 'printing type')
                 user.add_picture(user_info['basic_info'].get('picture'))
-                print('done here')
             user.add_notification("Welcome to Cosmos", 'welcome')
             user.save()
             return True

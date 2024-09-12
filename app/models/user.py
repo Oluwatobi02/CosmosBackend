@@ -36,10 +36,6 @@ class User(db.Document):
                 'website': self.basic_info.website,
             }
             return res
-    
-    def test(self):
-        print(self.to_dict())
-        return [self.name, self.email, self.basic_info.title]
 
 
     def add_picture(self, blob_data):

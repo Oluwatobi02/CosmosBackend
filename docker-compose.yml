@@ -12,6 +12,13 @@ services:
     ports:
       - "6379:6379"
 
+  rqworker:
+    build: .
+    command: rq worker --url redis://backend-redis-1:6379/0
+
+    depends_on:
+      - redis
+
   nginx:
     image: nginx:latest
     ports:

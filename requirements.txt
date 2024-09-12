@@ -9,3 +9,4 @@ redis
 flask-socketio
 gunicorn
 boto3
+rq

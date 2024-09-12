@@ -1,7 +1,7 @@
 from flask_mongoengine import MongoEngine
 from datetime import datetime
 from app.models.user import User
-from app.models.message import GroupMessage, SingleMessage
+from app.models.message import GroupMessage, SingleMessage, Msg
 
 db = MongoEngine()
 
@@ -28,3 +28,4 @@ class Organizer(db.Document):
 
         }
         return res
+    

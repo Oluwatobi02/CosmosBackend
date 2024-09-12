@@ -13,4 +13,4 @@ class Config:
         'host': os.getenv('MONGODB_URI', ''),
         'port': 27017,
     }
-    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'your_jwt_secret_key')
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'your_jwt_secret_key'),
