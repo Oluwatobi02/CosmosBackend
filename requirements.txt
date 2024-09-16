@@ -10,3 +10,5 @@ flask-socketio
 gunicorn
 boto3
 rq
+gevent
+gevent-websocket

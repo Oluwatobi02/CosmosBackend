@@ -1,13 +1,12 @@
 import uuid
 from flask_mongoengine import MongoEngine
 db = MongoEngine()
-from app.utils.helper import Helper
 
 class Notification(db.EmbeddedDocument):
     meta = {
     'allow_inheritance': True
             }
-    id = db.StringField(default=str(uuid.uuid4()), required=True, unique=True)
+    id = db.StringField(default=lambda : str(uuid.uuid4()), required=True, unique=True)
     message = db.StringField(required=True)
     tag = db.StringField(required=True)
     created_at = db.DateTimeField(required=True)
@@ -17,7 +16,7 @@ class Notification(db.EmbeddedDocument):
             "id": self.id,
             "message": self.message,
             "tag": self.tag,
-            "created_at": Helper.convert_to_readable(self.created_at)
+            "created_at": self.created_at
         }
 
 

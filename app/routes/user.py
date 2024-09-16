@@ -5,7 +5,6 @@ from app.services.search_service import SearchService
 from app.utils.algorithms import Trie
 from app.amazon.upload import upload_file
 from app.redis_config import r, queue
-from app.routes.utest import rqfunction, rqfunction1
 
 
 user_bp = Blueprint('users', __name__)

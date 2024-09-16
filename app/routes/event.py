@@ -22,7 +22,6 @@ def create_event():
 def get_event(event_id):
     user_id = get_jwt_identity()
     event = EventService.get_event(user_id, event_id)
-    print(event)
     return jsonify(event=event.to_dict())
 
 @event_bp.route('/')
@@ -33,5 +32,11 @@ def get_user_events():
     speaker = Speaker.objects(id=user_id).first()
     speaking = speaker.get_events() if speaker else []
     organized = organizer.get_events() if organizer else []
-    return jsonify(organized=organized, speaking=speaking)
+    return jsonify(organized_events=organized, speaking_events=speaking)
     
+@event_bp.route('/teams')
+@jwt_required()
+def get_events_teams():
+    user_id = get_jwt_identity()
+    teams = EventService.get_events_for_message(user_id)
+    return jsonify(teams=teams)

@@ -21,4 +21,5 @@ ENV aws_picture_url=https://cosmos-bucket1.s3.us-east-2.amazonaws.com/
 ENV CELERY_BROKER_URL='redis://backend-redis-1:6379/0'
 ENV CELERY_RESULT_BACKEND='redis://backend-redis-1:6379/0'
 
-CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:5000", "main:app"]
+# CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:5000", "main:app"]
+CMD ["gunicorn", "-k", "geventwebsocket.gunicorn.workers.GeventWebSocketWorker", "-w", "2", "-b", "0.0.0.0:5000", "main:app"]

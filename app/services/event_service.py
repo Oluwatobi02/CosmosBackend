@@ -2,7 +2,9 @@ from datetime import datetime
 from app.models.organizer import Organizer
 from app.models.event import Event, Onboarding
 from app.models.speaker import Speaker
+from app.utils.helper import get_hex_hash
 from bson import ObjectId
+from collections import defaultdict
 class EventService:
     @staticmethod
     def createEvent(event_info):
@@ -18,28 +20,28 @@ class EventService:
             event.save()
             if fevent.get('picture'):
                 event.add_picture(fevent.get('picture'))
-                event.save()
-            for organizer in org_speak['organizers']:
-                host = Organizer.objects(id=organizer).first()
-                if not host:
-                    host = Organizer(
-                        id=ObjectId(organizer)
-                    )
-                host.add_event(event.id)
-                host.save()
             for speaker_id in org_speak['speakers']:
                 speaker = Speaker.objects(id=speaker_id).first()
                 if not speaker:
                     speaker = Speaker(
                         id=ObjectId(speaker_id)
                     )
+                    speaker.save()
                 speaker.add_event(event.id)
                 speaker.save()
+            for organizer in org_speak['organizers']:
+                host = Organizer.objects(id=organizer).first()
+                if not host:
+                    host = Organizer(
+                        id=ObjectId(organizer)
+                    )
+                    host.save()
+                host.add_event(event.id)
+                host.save()
             return True
-        except:
+        except Exception as e:
+            print(e)
             return False
-
-
 
     @staticmethod
     def format_event_to_create(event_info):
@@ -63,8 +65,44 @@ class EventService:
         onboarding = event_info.get('onboarding')
         return event_, org_speak, onboarding
     
-
     @staticmethod
     def get_event(user_id, event_id):
         event = Event.objects(id=event_id).first()
         return event
+    
+    @staticmethod
+    def get_events_for_message(user_id):
+        try:
+            organizer = Organizer.objects(id=user_id).first()
+            speaker = Speaker.objects(id=user_id).first()
+            event_team = []
+            oevent = {}
+            sevent = {}
+            if organizer:
+                for event in organizer.events:
+                    members = event.organizers + event.speakers
+
+                    oevent = event.team_dict()
+                    oevent['members'] = []
+                    for member in members:
+                        member = member.team_dict()
+                        if member['id'] == user_id:
+                            continue
+                        member['memberid'] = get_hex_hash([user_id, member['id']])
+                        oevent['members'].append(member)
+                    event_team.append(oevent)
+            if speaker:
+                for event in speaker.events:
+                    sevent = event.team_dict()
+                    members = event.speakers + event.organizers
+                    sevent['members'] = []
+                    for member in members:
+                        member = member.team_dict()
+                        if member['id'] == user_id:
+                            continue
+                        member['memberid'] = get_hex_hash([user_id, member['id']])
+                        sevent['members'].append(member)
+                    event_team.append(sevent)                       
+            return event_team
+        except Exception as e:
+            return f'{e}'

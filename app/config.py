@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 class Config:
-    SECRET_KEY = os.getenv('SECRET_KEY', 'your_secret_key')
+    SECRET_KEY = os.getenv('SECRET_KEY', 'mouse')
     REDIS_CONFIG = {
         'host': os.getenv('REDIS_HOST', 'localhost'),
         'port': 6379,
@@ -13,4 +13,4 @@ class Config:
         'host': os.getenv('MONGODB_URI', ''),
         'port': 27017,
     }
-    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'your_jwt_secret_key'),
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')

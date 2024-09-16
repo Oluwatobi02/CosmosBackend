@@ -13,7 +13,8 @@ session = boto3.Session(
 s3 = session.resource('s3')
 def upload_file(blob_data, name):
     try:
-
+        if len(blob_data) < 40:
+            return ''
         file_data = base64.b64decode(blob_data)
         
         file_stream = BytesIO(file_data)
