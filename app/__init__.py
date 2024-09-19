@@ -16,7 +16,7 @@ def create_app():
 
     db.init_app(app)
     jwt.init_app(app)
-    socketio.init_app(app)
+    socketio.init_app(app, cors_allowed_origins="*", ping_timeout=60, ping_interval=25)
     register_routes(app)
 
     return app

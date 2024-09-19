@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from datetime import datetime, timezone
 from app import socketio
 from flask_socketio import join_room, leave_room, emit
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -14,6 +15,13 @@ def recent_msg():
     recents = MessageService.get_recent_message_list(user_id)
     return jsonify(single=recents[0], group=recents[1])
 
+
+@msg_bp.route('/<msg>')
+@jwt_required()
+def get_messages(msg):
+    messages = MessageService.get_messages(msg)
+    return jsonify(messages)
+
 @msg_bp.route('/', methods=['POST'])
 @jwt_required()
 def create_chat():
@@ -28,7 +36,7 @@ def send_message(data):
     msg = Msg(
         sender= data['sender'],
         message= data['message'],
-        time= data['time']
+        time= str(datetime.now(timezone.utc))
             ) 
       
     if data['message_type'] == 'single':
@@ -45,7 +53,6 @@ def send_message(data):
 def join_single_chat(data):
     room = data.get('room')
     join_room(room)
-    print(room, data.get('name'))
     emit('events',f'{data.get("name")} has joined the chat',to=room)
 
 @socketio.on('testing')

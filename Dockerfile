@@ -18,8 +18,8 @@ ENV aws_access_key_id=AKIAW5WU5F3U5ZROK254
 ENV aws_secret_access_key=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
 ENV region_name=us-east-2
 ENV aws_picture_url=https://cosmos-bucket1.s3.us-east-2.amazonaws.com/
-ENV CELERY_BROKER_URL='redis://backend-redis-1:6379/0'
-ENV CELERY_RESULT_BACKEND='redis://backend-redis-1:6379/0'
 
 # CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:5000", "main:app"]
-CMD ["gunicorn", "-k", "geventwebsocket.gunicorn.workers.GeventWebSocketWorker", "-w", "2", "-b", "0.0.0.0:5000", "main:app"]
+# CMD ["gunicorn", "-k", "geventwebsocket.gunicorn.workers.GeventWebSocketWorker", "-w", "2", "-b", "0.0.0.0:5000", "main:app"]
+
+CMD ["gunicorn", "-k", "geventwebsocket.gunicorn.workers.GeventWebSocketWorker", "-w", "8", "-b", "0.0.0.0:5000", "--timeout", "300", "--log-level", "debug", "--access-logfile", "-", "main:app"]

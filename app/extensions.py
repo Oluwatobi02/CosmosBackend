@@ -4,4 +4,4 @@ from flask_socketio import SocketIO
 
 db = MongoEngine()
 jwt = JWTManager()
-socketio = SocketIO(cors_allowed_origins="*")
+socketio = SocketIO()

@@ -27,7 +27,7 @@ class MessageService:
                 msg = GroupMessage.objects(id=msg.id).first()
                 group_message_list.append(msg)
         return [single_message_list, group_message_list]
-    
+
     @staticmethod
     def create_message(data):
         try:
@@ -81,3 +81,12 @@ class MessageService:
             return True
         except Exception as e:
             return f'{e}'
+        
+
+    @staticmethod
+    def get_messages(msg_id):
+        message = Message.objects(id=msg_id).first()
+        if message:
+            return message.messages
+        else: 
+            return False
