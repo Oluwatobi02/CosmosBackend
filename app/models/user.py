@@ -36,11 +36,13 @@ class User(db.Document):
                 'website': self.basic_info.website,
             }
             return res
-    
-    def test(self):
-        print(self.to_dict())
-        return [self.name, self.email, self.basic_info.title]
-
+    def to_base_dict(self):
+         res = {
+              "id": str(self.id),
+              "picture": self.basic_info.picture,
+              "title": self.basic_info.title
+         }
+         return res
 
     def add_picture(self, blob_data):
         print('here 2')
@@ -49,10 +51,12 @@ class User(db.Document):
         link = upload_file(blob_data, name)
         print(link)
         self.basic_info.picture = link
+        self.save()
     
     def add_notification(self, message, tag):
         notification = Notification(message=message, tag=tag, created_at=datetime.now())
         self.notifications.append(notification)
+        self.save()
 
     def notifications_to_dict(self):
         return [noti.to_dict() for noti in self.notifications]

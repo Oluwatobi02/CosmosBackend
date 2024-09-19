@@ -4,6 +4,8 @@ from app.models.user import User
 from app.services.search_service import SearchService
 from app.utils.algorithms import Trie
 from app.amazon.upload import upload_file
+from app.redis_config import r, queue
+
 
 user_bp = Blueprint('users', __name__)
 
@@ -23,11 +25,3 @@ def search_user():
     res = trie.search(email)
 
     return jsonify(present=res)
-
-@user_bp.route('/test', methods=['POST'])
-def testing():
-    data = request.get_json()
-    print(data.get("picture"), 'data picture')
-    link = upload_file(data.get('picture'), 'tobi3')
-
-    return jsonify(link=link, success=link)
